@@ -3,9 +3,9 @@ import { userRouter } from "./user";
 import { spaceRouter } from "./space";
 import { adminRouter } from "./admin";
 import { SigninSchema, SignupSchema } from "../../types";
-import client from "@metaverse/db/client"
-import { compare, hash } from "../../types/scrypt";
-import jwt from "jsonwebtoken"
+import {hash, compare} from "../../scrypt"
+import client from "@metaverse/db/client";
+import jwt from "jsonwebtoken";
 import { JWT_PASSWORD } from "../../config";
 
 export const router = Router();
@@ -78,6 +78,27 @@ router.post("/signin", async (req, res) => {
     }
 })
 
+router.get("/elements", async (req, res) => {
+    const elements = await client.element.findMany()
+
+    res.json({elements: elements.map(e => ({
+        id: e.id,
+        imageUrl: e.imageUrl,
+        width: e.width,
+        height: e.height,
+        static: e.static
+    }))})
+})
+
+router.get("/avatars", async (req, res) => {
+    const avatars = await client.avatar.findMany()
+    res.json({avatars: avatars.map(x => ({
+        id: x.id,
+        imageUrl: x.imageUrl,
+        name: x.name
+    }))})
+})
+
 router.use("/user", userRouter)
-router.use("/admin", adminRouter)
 router.use("/space", spaceRouter)
+router.use("/admin", adminRouter)
