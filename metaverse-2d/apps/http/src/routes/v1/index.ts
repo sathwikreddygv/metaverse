@@ -11,7 +11,7 @@ import { JWT_PASSWORD } from "../../config";
 export const router = Router();
 
 router.post("/signup", async (req, res) => {
-    console.log("inside signup")
+    console.log("inside signup", req.body)
     // check the user
     const parsedData = SignupSchema.safeParse(req.body)
     if (!parsedData.success) {
